@@ -18,3 +18,4 @@ prometheus = { workspace = true }
 axum = { workspace = true }
 anyhow = { workspace = true }
 uuid = { workspace = true }
+chrono = { workspace = true }

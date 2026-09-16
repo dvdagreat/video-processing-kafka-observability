@@ -214,6 +214,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
+ "chrono",
  "opentelemetry",
  "opentelemetry-otlp",
  "opentelemetry_sdk",
@@ -1277,6 +1278,18 @@ dependencies = [
 [[package]]
 name = "resolution-consumer"
 version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "common",
+ "futures-util",
+ "prometheus",
+ "rskafka",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "uuid",
+]
 
 [[package]]
 name = "rskafka"
