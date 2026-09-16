@@ -1,0 +1,31 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: api-server
+    static_configs:
+      - targets: ["api-server:9100"]
+
+  - job_name: resolution-consumer-240p
+    static_configs:
+      - targets: ["resolution-consumer-240p:9100"]
+
+  - job_name: resolution-consumer-360p
+    static_configs:
+      - targets: ["resolution-consumer-360p:9100"]
+
+  - job_name: resolution-consumer-480p
+    static_configs:
+      - targets: ["resolution-consumer-480p:9100"]
+
+  - job_name: resolution-consumer-720p
+    static_configs:
+      - targets: ["resolution-consumer-720p:9100"]
+
+  - job_name: final-consumer
+    static_configs:
+      - targets: ["final-consumer:9100"]
