@@ -1,14 +1,13 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod chunk;
+pub mod events;
+pub mod kafka;
+pub mod telemetry;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub use chunk::ChunkMeta;
+pub use events::{EventKind, ProcessingEvent};
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub const RAW_VIDEO_CHUNKS_TOPIC: &str = "raw-video-chunks";
+pub const PROCESSED_VIDEO_CHUNKS_TOPIC: &str = "processed-video-chunks";
+pub const PROCESSING_EVENTS_TOPIC: &str = "processing-events";
+
+pub const RESOLUTIONS: [&str; 4] = ["240p", "360p", "480p", "720p"];
