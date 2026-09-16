@@ -310,6 +310,16 @@ dependencies = [
 [[package]]
 name = "final-consumer"
 version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "common",
+ "futures-util",
+ "rskafka",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "uuid",
+]
 
 [[package]]
 name = "find-msvc-tools"
