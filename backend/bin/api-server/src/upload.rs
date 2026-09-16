@@ -82,7 +82,6 @@ async fn run_segmentation(state: &AppState, video_id: Uuid, input_path: &Path) -
         .arg(input_path)
         .args(["-c", "copy", "-map", "0"])
         .args(["-f", "segment", "-segment_time", SEGMENT_SECONDS])
-        .args(["-reset_timestamps", "1"])
         .arg(segments_dir.join("chunk_%05d.ts"))
         .stdin(Stdio::null())
         .stdout(Stdio::null())

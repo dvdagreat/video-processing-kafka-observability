@@ -16,10 +16,11 @@ pub fn target_height(resolution: &str) -> Result<u32> {
 
 pub async fn transcode_chunk(input: Vec<u8>, height: u32) -> Result<Vec<u8>> {
     let mut child = Command::new("ffmpeg")
-        .args(["-i", "-"])
+        .args(["-copyts", "-i", "-"])
         .args(["-vf", &format!("scale=-2:{height}")])
         .args(["-c:v", "libx264", "-preset", "veryfast"])
         .args(["-c:a", "aac"])
+        .args(["-muxdelay", "0", "-muxpreload", "0"])
         .args(["-f", "mpegts", "-"])
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())

@@ -51,6 +51,7 @@ async fn run(
     );
     let mut stream = StreamConsumerBuilder::new(processed_client, StartOffset::Earliest)
         .with_max_wait_ms(500)
+        .with_max_batch_size(20_000_000)
         .build();
 
     let mut writers: HashMap<(Uuid, String), WriterState> = HashMap::new();

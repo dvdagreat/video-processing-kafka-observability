@@ -69,6 +69,7 @@ async fn run(
     );
     let mut stream = StreamConsumerBuilder::new(raw_client, StartOffset::Earliest)
         .with_max_wait_ms(500)
+        .with_max_batch_size(20_000_000)
         .build();
 
     while let Some(result) = stream.next().await {
@@ -114,7 +115,21 @@ async fn run(
                     .produce(vec![out_record], Compression::NoCompression)
                     .await
                 {
+                    metrics.chunk_errors_total.inc();
                     tracing::error!(?err, "failed to publish processed chunk");
+                    common::events::publish(
+                        events_client,
+                        &ProcessingEvent {
+                            video_id: meta.video_id,
+                            resolution: Some(resolution.to_string()),
+                            event: EventKind::Failed,
+                            chunk_index: Some(meta.chunk_index),
+                            total_chunks: None,
+                            error: Some(err.to_string()),
+                        },
+                    )
+                    .await
+                    .ok();
                     continue;
                 }
 
