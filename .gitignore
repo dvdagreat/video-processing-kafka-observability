@@ -4,3 +4,5 @@ target/
 /frontend/dist
 .env
 *.log
+/initial-plan.md
+/plan.md
