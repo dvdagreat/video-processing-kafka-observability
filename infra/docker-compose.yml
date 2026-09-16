@@ -79,3 +79,108 @@ services:
     depends_on:
       - prometheus
       - loki
+
+  api-server:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: video-pipeline-backend:latest
+    container_name: api-server
+    command: ["api-server"]
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      STORAGE_ROOT: /data
+      LISTEN_ADDR: 0.0.0.0:8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - video-storage:/data
+    depends_on:
+      - kafka
+      - otel-collector
+
+  resolution-consumer-240p:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: video-pipeline-backend:latest
+    container_name: resolution-consumer-240p
+    command: ["resolution-consumer"]
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      RESOLUTION: 240p
+      METRICS_PORT: "9100"
+    depends_on:
+      - kafka
+      - otel-collector
+
+  resolution-consumer-360p:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: video-pipeline-backend:latest
+    container_name: resolution-consumer-360p
+    command: ["resolution-consumer"]
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      RESOLUTION: 360p
+      METRICS_PORT: "9100"
+    depends_on:
+      - kafka
+      - otel-collector
+
+  resolution-consumer-480p:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: video-pipeline-backend:latest
+    container_name: resolution-consumer-480p
+    command: ["resolution-consumer"]
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      RESOLUTION: 480p
+      METRICS_PORT: "9100"
+    depends_on:
+      - kafka
+      - otel-collector
+
+  resolution-consumer-720p:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: video-pipeline-backend:latest
+    container_name: resolution-consumer-720p
+    command: ["resolution-consumer"]
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      RESOLUTION: 720p
+      METRICS_PORT: "9100"
+    depends_on:
+      - kafka
+      - otel-collector
+
+  final-consumer:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: video-pipeline-backend:latest
+    container_name: final-consumer
+    command: ["final-consumer"]
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      STORAGE_ROOT: /data
+      METRICS_PORT: "9100"
+    volumes:
+      - video-storage:/data
+    depends_on:
+      - kafka
+      - otel-collector
+
+volumes:
+  video-storage:
