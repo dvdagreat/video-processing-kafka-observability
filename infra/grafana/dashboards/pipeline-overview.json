@@ -1,0 +1,120 @@
+{
+  "title": "Video Pipeline Overview",
+  "uid": "video-pipeline-overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "5s",
+  "time": { "from": "now-30m", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Chunks processed per resolution (rate)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "rate(chunks_processed_total_240p[1m])",
+          "legendFormat": "240p",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(chunks_processed_total_360p[1m])",
+          "legendFormat": "360p",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(chunks_processed_total_480p[1m])",
+          "legendFormat": "480p",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(chunks_processed_total_720p[1m])",
+          "legendFormat": "720p",
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Chunk transcode duration (p50 / p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, rate(chunk_transcode_duration_seconds_720p_bucket[5m]))",
+          "legendFormat": "720p p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(chunk_transcode_duration_seconds_720p_bucket[5m]))",
+          "legendFormat": "720p p95",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.5, rate(chunk_transcode_duration_seconds_240p_bucket[5m]))",
+          "legendFormat": "240p p50",
+          "refId": "C"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(chunk_transcode_duration_seconds_240p_bucket[5m]))",
+          "legendFormat": "240p p95",
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Chunk errors per resolution",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "increase(chunk_errors_total_240p[5m])",
+          "legendFormat": "240p",
+          "refId": "A"
+        },
+        {
+          "expr": "increase(chunk_errors_total_360p[5m])",
+          "legendFormat": "360p",
+          "refId": "B"
+        },
+        {
+          "expr": "increase(chunk_errors_total_480p[5m])",
+          "legendFormat": "480p",
+          "refId": "C"
+        },
+        {
+          "expr": "increase(chunk_errors_total_720p[5m])",
+          "legendFormat": "720p",
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Service targets up",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "up{job=~\"api-server|resolution-consumer.*|final-consumer\"}",
+          "legendFormat": "{{job}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Logs",
+      "type": "logs",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "targets": [
+        {
+          "expr": "{container=~\"api-server|resolution-consumer.*|final-consumer\"}",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}
