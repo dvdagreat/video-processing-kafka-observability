@@ -69,6 +69,7 @@ pub async fn upload_video(
     Ok(Json(UploadResponse { video_id }))
 }
 
+#[tracing::instrument(skip(state, input_path), fields(video_id = %video_id))]
 async fn run_segmentation(state: &AppState, video_id: Uuid, input_path: &Path) -> Result<()> {
     let segments_dir = input_path
         .parent()
@@ -158,6 +159,7 @@ fn segment_path(dir: &Path, index: u32) -> PathBuf {
     dir.join(format!("chunk_{index:05}.ts"))
 }
 
+#[tracing::instrument(skip(client, path), fields(video_id = %video_id, chunk_index, is_last))]
 async fn publish_chunk(
     client: &PartitionClient,
     video_id: Uuid,

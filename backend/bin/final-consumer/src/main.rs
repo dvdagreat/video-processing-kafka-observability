@@ -71,6 +71,14 @@ async fn run(
             continue;
         };
 
+        let span = tracing::info_span!(
+            "write_chunk",
+            video_id = %meta.video_id,
+            resolution = %resolution,
+            chunk_index = meta.chunk_index,
+        );
+        let _entered = span.enter();
+
         let output_dir = storage_root
             .join("output")
             .join(meta.video_id.to_string());
