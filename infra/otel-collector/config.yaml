@@ -13,7 +13,12 @@ exporters:
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
 
+extensions:
+  zpages:
+    endpoint: 0.0.0.0:55679
+
 service:
+  extensions: [zpages]
   pipelines:
     traces:
       receivers: [otlp]
