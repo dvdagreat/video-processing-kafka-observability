@@ -47,7 +47,7 @@ pub async fn download_video(
         .storage_root
         .join("output")
         .join(video_id.to_string())
-        .join(format!("{resolution}.ts"));
+        .join(format!("{resolution}.mp4"));
 
     let file = tokio::fs::File::open(&path)
         .await
@@ -55,10 +55,10 @@ pub async fn download_video(
     let stream = tokio_util::io::ReaderStream::new(file);
     let body = axum::body::Body::from_stream(stream);
 
-    let filename = format!("{video_id}-{resolution}.ts");
+    let filename = format!("{video_id}-{resolution}.mp4");
     Ok((
         [
-            (axum::http::header::CONTENT_TYPE, "video/mp2t".to_string()),
+            (axum::http::header::CONTENT_TYPE, "video/mp4".to_string()),
             (
                 axum::http::header::CONTENT_DISPOSITION,
                 format!("attachment; filename=\"{filename}\""),

@@ -1,3 +1,4 @@
+mod remux;
 mod writer;
 
 use std::collections::HashMap;
@@ -101,19 +102,40 @@ async fn run(
             Ok(completed) => {
                 if completed {
                     writers.remove(&key);
-                    common::events::publish(
-                        events_client,
-                        &ProcessingEvent {
-                            video_id: meta.video_id,
-                            resolution: Some(resolution),
-                            event: EventKind::ResolutionCompleted,
-                            chunk_index: Some(meta.chunk_index),
-                            total_chunks: None,
-                            error: None,
-                        },
-                    )
-                    .await
-                    .ok();
+                    let mp4_path = output_dir.join(format!("{resolution}.mp4"));
+                    match remux::remux_to_mp4(&output_path, &mp4_path).await {
+                        Ok(()) => {
+                            common::events::publish(
+                                events_client,
+                                &ProcessingEvent {
+                                    video_id: meta.video_id,
+                                    resolution: Some(resolution),
+                                    event: EventKind::ResolutionCompleted,
+                                    chunk_index: Some(meta.chunk_index),
+                                    total_chunks: None,
+                                    error: None,
+                                },
+                            )
+                            .await
+                            .ok();
+                        }
+                        Err(err) => {
+                            tracing::error!(?err, "failed to remux to mp4");
+                            common::events::publish(
+                                events_client,
+                                &ProcessingEvent {
+                                    video_id: meta.video_id,
+                                    resolution: Some(resolution),
+                                    event: EventKind::Failed,
+                                    chunk_index: Some(meta.chunk_index),
+                                    total_chunks: None,
+                                    error: Some(err.to_string()),
+                                },
+                            )
+                            .await
+                            .ok();
+                        }
+                    }
                 }
             }
             Err(err) => {
