@@ -9,6 +9,7 @@ use common::{ChunkMeta, EventKind, ProcessingEvent};
 use futures_util::StreamExt;
 use rskafka::client::consumer::{StartOffset, StreamConsumerBuilder};
 use rskafka::client::partition::PartitionClient;
+use tracing_opentelemetry::OpenTelemetrySpanExt;
 use uuid::Uuid;
 use writer::WriterState;
 
@@ -71,12 +72,14 @@ async fn run(
             continue;
         };
 
+        let parent_cx = common::propagation::extract(&record.headers);
         let span = tracing::info_span!(
             "write_chunk",
             video_id = %meta.video_id,
             resolution = %resolution,
             chunk_index = meta.chunk_index,
         );
+        span.set_parent(parent_cx);
         let _entered = span.enter();
 
         let output_dir = storage_root

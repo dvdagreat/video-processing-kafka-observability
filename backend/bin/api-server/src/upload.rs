@@ -174,10 +174,12 @@ async fn publish_chunk(
         is_last,
         resolution: None,
     };
+    let mut headers = meta.to_headers();
+    common::propagation::inject(&mut headers);
     let record = Record {
         key: Some(video_id.as_bytes().to_vec()),
         value: Some(bytes),
-        headers: meta.to_headers(),
+        headers,
         timestamp: Utc::now(),
     };
     client

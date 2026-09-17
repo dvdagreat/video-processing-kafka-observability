@@ -97,9 +97,45 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
       "targets": [
         {
-          "expr": "up{job=~\"api-server|resolution-consumer.*|final-consumer\"}",
+          "expr": "up{job=~\"api-server|watermark-consumer|resolution-consumer.*|final-consumer\"}",
           "legendFormat": "{{job}}",
           "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Watermark stage throughput and errors (rate)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "targets": [
+        {
+          "expr": "rate(watermark_chunks_processed_total[1m])",
+          "legendFormat": "processed",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(watermark_chunk_errors_total[1m])",
+          "legendFormat": "errors",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Watermark duration (p50 / p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, rate(watermark_chunk_duration_seconds_bucket[5m]))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(watermark_chunk_duration_seconds_bucket[5m]))",
+          "legendFormat": "p95",
+          "refId": "B"
         }
       ]
     },
@@ -107,11 +143,11 @@
       "id": 5,
       "title": "Logs",
       "type": "logs",
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 24 },
       "datasource": { "type": "loki", "uid": "loki" },
       "targets": [
         {
-          "expr": "{container=~\"api-server|resolution-consumer.*|final-consumer\"}",
+          "expr": "{container=~\"api-server|watermark-consumer|resolution-consumer.*|final-consumer\"}",
           "refId": "A"
         }
       ]

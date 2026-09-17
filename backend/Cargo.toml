@@ -5,6 +5,7 @@ members = [
     "bin/api-server",
     "bin/resolution-consumer",
     "bin/final-consumer",
+    "bin/watermark-consumer",
 ]
 
 [workspace.dependencies]

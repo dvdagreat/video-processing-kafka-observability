@@ -1,5 +1,5 @@
 [package]
-name = "final-consumer"
+name = "watermark-consumer"
 version = "0.1.0"
 edition = "2024"
 
@@ -12,4 +12,6 @@ tracing = { workspace = true }
 tracing-opentelemetry = { workspace = true }
 anyhow = { workspace = true }
 uuid = { workspace = true }
+chrono = { workspace = true }
 futures-util = { workspace = true }
+prometheus = { workspace = true }

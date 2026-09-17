@@ -26,6 +26,9 @@ pub fn init_tracing(service_name: &str) -> Result<sdktrace::TracerProvider> {
         .install_batch(opentelemetry_sdk::runtime::Tokio)?;
 
     opentelemetry::global::set_tracer_provider(tracer_provider.clone());
+    opentelemetry::global::set_text_map_propagator(
+        opentelemetry_sdk::propagation::TraceContextPropagator::new(),
+    );
 
     let tracer = tracer_provider.tracer(service_name.to_string());
     let otel_layer = tracing_opentelemetry::layer().with_tracer(tracer);

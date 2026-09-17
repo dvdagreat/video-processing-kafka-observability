@@ -9,6 +9,7 @@ tokio = { workspace = true }
 rskafka = { workspace = true }
 serde_json = { workspace = true }
 tracing = { workspace = true }
+tracing-opentelemetry = { workspace = true }
 anyhow = { workspace = true }
 uuid = { workspace = true }
 chrono = { workspace = true }
